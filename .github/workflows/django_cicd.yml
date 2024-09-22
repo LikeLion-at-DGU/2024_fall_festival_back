@@ -1,15 +1,15 @@
 name: Django CI/CD Pipeline
 
 on:
-  pull_request:
-    types: [closed]  # PR이 닫힐 때만 실행
-    branches:
-      - main  # main 브랜치로 머지된 경우만 실행
+  push:
+        branches: ["main"]
+  pull_request_target:
+        types: [labeled, closed]
 
 jobs:
   build:
+    if: contains(github.event.pull_request.labels.*.name, 'safe')
     runs-on: ubuntu-24.04
-    if: github.event.pull_request.merged == true  # PR이 머지된 경우에만 실행
 
     steps:
       # 1. GitHub Actions Runner에서 코드를 체크아웃
