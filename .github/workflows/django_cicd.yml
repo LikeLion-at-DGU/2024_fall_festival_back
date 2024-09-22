@@ -1,0 +1,64 @@
+name: Django CI/CD Pipeline
+
+on:
+  pull_request:
+    types: [closed]  # PR이 닫힐 때만 실행
+    branches:
+      - main  # main 브랜치로 머지된 경우만 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    if: github.event.pull_request.merged == true  # PR이 머지된 경우에만 실행
+
+    steps:
+      # 1. GitHub Actions Runner에서 코드를 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. Python 3.12 설정
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      # 3. Docker 로그인 (토큰 사용)
+      - name: Log in to Docker Hub with token
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # 4. 도커 이미지 빌드 및 Docker Hub에 Push
+      - name: Build and push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
+
+  deploy:
+    runs-on: ubuntu-24.04
+    needs: build
+
+    steps:
+      # 1. 서버에 SSH 접속 (pem 키 사용)
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}  # pem 키가 GitHub Secrets에 저장된 변수
+          key_type: pem                       # pem 형식으로 지정
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            # 2. Docker 로그인 (토큰 사용)
+            echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+            # 3. 도커 이미지 Pull
+            docker pull ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
+
+            # 4. 기존 컨테이너 중지 및 삭제
+            docker stop django-app || true
+            docker rm django-app || true
+
+            # 5. 새로운 컨테이너 시작
+             sudo docker run --env-file .env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
+
+            # 6. Django 프로젝트의 static 파일 collect
+            docker exec django-app python manage.py collectstatic --noinput
