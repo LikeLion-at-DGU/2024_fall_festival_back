@@ -44,7 +44,6 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}  # pem 키가 GitHub Secrets에 저장된 변수
-          key_type: pem                       # pem 형식으로 지정
           port: ${{ secrets.SSH_PORT }}
           script: |
             # 2. Docker 로그인 (토큰 사용)
@@ -54,11 +53,11 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
             # 4. 기존 컨테이너 중지 및 삭제
-            docker stop django-app || true
-            docker rm django-app || true
+            docker stop festival_backend_server || true
+            docker rm festival_backend_server || true
 
             # 5. 새로운 컨테이너 시작
-             sudo docker run --env-file .env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
+            sudo docker run --env-file .env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
             # 6. Django 프로젝트의 static 파일 collect
-            docker exec django-app python manage.py collectstatic --noinput
+            docker exec festival_backend_server python manage.py collectstatic --noinput
