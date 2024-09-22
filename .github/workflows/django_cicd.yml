@@ -1,13 +1,15 @@
 name: Django CI/CD Pipeline
 
 on:
-  push:
+  pull_request:
+    types: [closed]  # PR이 닫힐 때만 실행
     branches:
-      - main
+      - main  # main 브랜치로 머지된 경우만 실행
 
 jobs:
   build:
     runs-on: ubuntu-24.04
+    if: github.event.pull_request.merged == true  # PR이 머지된 경우에만 실행
 
     steps:
       # 1. GitHub Actions Runner에서 코드를 체크아웃
@@ -23,9 +25,6 @@ jobs:
       # 3. Docker 로그인 (토큰 사용)
       - name: Log in to Docker Hub with token
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-      
-      - name: Remove unused Docker resources
-        run: docker system prune -af  # 불필요한 Docker 이미지와 컨테이너 삭제
 
       # 4. 도커 이미지 빌드 및 Docker Hub에 Push
       - name: Build and push Docker image
@@ -52,13 +51,14 @@ jobs:
             echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
             # 3. 도커 이미지 Pull
-            docker pull ${{ secrets.DOCKER_USERNAME }}/your-django-app:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
             # 4. 기존 컨테이너 중지 및 삭제
             docker stop django-app || true
             docker rm django-app || true
 
             # 5. 새로운 컨테이너 시작
-            sudo docker run --env-file .env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
+             sudo docker run --env-file .env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
+
             # 6. Django 프로젝트의 static 파일 collect
             docker exec django-app python manage.py collectstatic --noinput
