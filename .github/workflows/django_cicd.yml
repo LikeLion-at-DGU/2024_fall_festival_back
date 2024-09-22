@@ -55,7 +55,7 @@ jobs:
             # 4. 기존 컨테이너 중지 및 삭제
             docker stop festival_backend_server || true
             docker rm festival_backend_server || true
-
+            docker image rm ${{ secrets.DOCKER_USERNAME }}/festival_backend_docker_image
             # 5. 새로운 컨테이너 시작
             sudo docker run --env-file .env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
