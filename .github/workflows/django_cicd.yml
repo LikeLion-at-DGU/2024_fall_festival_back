@@ -39,7 +39,7 @@ jobs:
     steps:
       # 1. 서버에 SSH 접속 (pem 키 사용)
       - name: Deploy to server
-        uses: appleboy/ssh-action@v0.1.3
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -55,7 +55,7 @@ jobs:
             # 4. 기존 컨테이너 중지 및 삭제
             docker stop festival_backend_server || true
             docker rm festival_backend_server || true
-
+            docker image rm ${{ secrets.DOCKER_USERNAME }}/festival_backend_docker_image
             # 5. 새로운 컨테이너 시작
             sudo docker run --env-file .env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
