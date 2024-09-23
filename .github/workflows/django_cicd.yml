@@ -47,17 +47,17 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             # 2. Docker 로그인 (토큰 사용)
-            echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            echo "${{ secrets.DOCKER_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
             # 3. 도커 이미지 Pull
-            docker pull ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
             # 4. 기존 컨테이너 중지 및 삭제
-            docker stop festival_backend_server || true
-            docker rm festival_backend_server || true
-            docker image rm ${{ secrets.DOCKER_USERNAME }}/festival_backend_docker_image
+            sudo docker stop festival_backend_server || true
+            sudo docker rm festival_backend_server || true
+            sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/festival_backend_docker_image
             # 5. 새로운 컨테이너 시작
             sudo docker run --env-file .env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
             # 6. Django 프로젝트의 static 파일 collect
-            docker exec festival_backend_server python manage.py collectstatic --noinput
+            sudo docker exec festival_backend_server python manage.py collectstatic --noinput
