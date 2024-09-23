@@ -49,13 +49,14 @@ jobs:
             # 2. Docker 로그인 (토큰 사용)
             echo "${{ secrets.DOCKER_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-            # 3. 도커 이미지 Pull
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
-
-            # 4. 기존 컨테이너 중지 및 삭제
+            # 3. 기존 컨테이너 중지 및 삭제
             sudo docker stop festival_backend_server || true
             sudo docker rm festival_backend_server || true
             sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/festival_backend_docker_image
+
+            # 4. 도커 이미지 Pull
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
+
             # 5. 새로운 컨테이너 시작
             sudo docker run --env-file 2024_fall_festival_back/.env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
