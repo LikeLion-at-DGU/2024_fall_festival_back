@@ -36,3 +36,4 @@ class Fire(models.Model):
 
     def __str__(self):
         return f"{self.day} - Fire Count: {self.fire_count}"
+    
