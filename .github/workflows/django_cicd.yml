@@ -43,7 +43,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}  # pem 키가 GitHub Secrets에 저장된 변수
+          key: ${{ secrets.SSH_KEY }}  # pem 키가 GitHub Secrets에 저장된 변수
           port: ${{ secrets.SSH_PORT }}
           script: |
             # 2. Docker 로그인 (토큰 사용)
