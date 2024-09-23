@@ -57,7 +57,7 @@ jobs:
             sudo docker rm festival_backend_server || true
             sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/festival_backend_docker_image
             # 5. 새로운 컨테이너 시작
-            sudo docker run --env-file .env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
+            sudo docker run --env-file 2024_fall_festival_back/.env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
             # 6. Django 프로젝트의 static 파일 collect
             sudo docker exec festival_backend_server python manage.py collectstatic --noinput
