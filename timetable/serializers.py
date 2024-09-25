@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import *
 
-<<<<<<< HEAD
 class TimetableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Timetable
@@ -17,9 +16,4 @@ class TimetableDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimetableDetail
-=======
-class TimetabledetailSerializer(serializers.ModelSerializer):
-    class Meata:
-        model = Timetable
->>>>>>> 2ddf488d530e821454c72245f60c2b7cf8300569
         fields = '__all__'
