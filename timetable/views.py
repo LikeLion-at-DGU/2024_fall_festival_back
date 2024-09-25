@@ -32,7 +32,22 @@ class FireViewSet(viewsets.ViewSet):
         serializer = FireSerializer(fire)
         return Response(serializer.data)
 
+class TimetableViewSet(viewsets.ModelViewSet):
+    serializer_class = TimetableSerializer
 
+    def get_queryset(self):
+        queryset = Timetable.objects.all()
+        day = self.request.query_params.get('day', None)
+        if day is not None:
+            queryset = queryset.filter(day=day)
+        return queryset
+    
+    @action(detail=False, methods=['get'])
+    def now(self, request):
+        now = timezone.now()
+        ongoing_timetable = Timetable.objects.filter(start_time__lte=now, end_time__gte=now)
+        serializer = self.get_serializer(ongoing_timetable, many=True)
+        return Response(serializer.data)
     
 class TimetableDetailViewSet(viewsets.ModelViewSet):
     """
