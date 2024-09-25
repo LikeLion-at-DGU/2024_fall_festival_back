@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -74,8 +73,3 @@ class TimetableDetailViewSet(viewsets.ModelViewSet):
         timetable = get_object_or_404(Timetable, pk=pk)
         serializer = TimetableSerializer(timetable)
         return Response(serializer.data)
-=======
-from django.shortcuts import render
-
-# Create your views here.
->>>>>>> 2ddf488d530e821454c72245f60c2b7cf8300569
