@@ -20,5 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('timetable.urls')),
-    path('', include('booth.urls')),  # booth 앱의 URL을 포함
+    path('api/', include('booth.urls')),  # booth 앱의 URL을 포함
 ]

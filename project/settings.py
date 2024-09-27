@@ -18,6 +18,8 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 env = environ.Env(DEBUG=(bool, False))
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
@@ -48,7 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'timetable',
-    'booth',
+    'booth',    # 부스 테이블 앱
 ]
 
 MIDDLEWARE = [

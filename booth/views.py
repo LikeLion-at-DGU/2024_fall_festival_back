@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins, generics
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Booth
-from .serializers import BoothSerializer
+from .models import Booth, BoothDetail
+from .serializers import BoothSerializer, BoothDetailSerializer
 # Create your views here.
 from django_filters.rest_framework import DjangoFilterBackend
 import django_filters
@@ -53,7 +53,11 @@ class BoothViewSet(viewsets.ModelViewSet):
         
         return queryset
 
+class BoothDetailViewSet(generics.RetrieveUpdateAPIView):
+    queryset = BoothDetail.objects.all()
+    serializer_class = BoothDetailSerializer
+    lookup_field = 'id'
 
-
-
-
+class BoothDetailListViewSet(generics.ListCreateAPIView):
+    queryset = BoothDetail.objects.all()
+    serializer_class = BoothDetailSerializer
