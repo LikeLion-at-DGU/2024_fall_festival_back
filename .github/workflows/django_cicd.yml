@@ -21,18 +21,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.12'
-      #프로젝트 의존성 설치 (requirements.txt)
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      #Django 데이터베이스 데이터 덤프 (dumpdata)
-      - name: Dump data from SQLite database
-        run: |
-          python manage.py dumpdata > data.json
-        shell: /usr/bin/bash -e {0}
-        env:
-          pythonLocation: /opt/hostedtoolcache/Python/3.12.6/x64
-          LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.6/x64/lib
       
       # 3. Docker 로그인 (토큰 사용)
       - name: Log in to Docker Hub with token
@@ -58,7 +46,22 @@ jobs:
           key: ${{ secrets.SSH_KEY }}  # pem 키가 GitHub Secrets에 저장된 변수
           port: ${{ secrets.SSH_PORT }}
           script: |
-            # 2. Docker 로그인 (토큰 사용)
+
+            # data.json 삭제
+            if [ -f "data.json" ]; then
+              sudo rm data.json
+            fi
+
+            # 기존 컨테이너 접속
+            sudo docker exec -it festival_backend_server bash
+
+            # data.json 생성
+            python manage.py dumpdata > data.json && exit
+
+            # data.json 을 컨테이너 외부로 복사
+            sudo docker cp festival_backend_server:/app/data.json ./data.json
+
+            # Docker 로그인 (토큰 사용)
             echo "${{ secrets.DOCKER_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
             # 3. 도커 이미지 Pull
@@ -74,6 +77,9 @@ jobs:
             # 5. 새로운 컨테이너 시작
             sudo docker run --env-file 2024_fall_festival_back/.env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
+            # data.json 파일을 복사 
+            sudo docker cp ./data.json festival_backend_server:/app/data.json
+            
             # 6. Django 프로젝트의 static 파일 collect
             sudo docker exec festival_backend_server python manage.py collectstatic --noinput
 
