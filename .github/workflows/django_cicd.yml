@@ -21,7 +21,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.12'
-
+      
+          # 3. Django 데이터베이스 데이터 덤프 (dumpdata)
+      - name: Dump data from SQLite database
+        run: |
+          python manage.py dumpdata > data.json
       # 3. Docker 로그인 (토큰 사용)
       - name: Log in to Docker Hub with token
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -55,9 +59,15 @@ jobs:
             # 4. 기존 컨테이너 중지 및 삭제
             sudo docker stop festival_backend_server || true
             sudo docker rm festival_backend_server || true
-            sudo docker image prune -f
+            
+            # 이전 버전 이미지 삭제
+            sudo docker image prune -f 
+
             # 5. 새로운 컨테이너 시작
             sudo docker run --env-file 2024_fall_festival_back/.env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
             # 6. Django 프로젝트의 static 파일 collect
             sudo docker exec festival_backend_server python manage.py collectstatic --noinput
+
+            # 7. SQLite 데이터 복원 (loaddata)
+            sudo docker exec festival_backend_server python manage.py loaddata /app/data.json
