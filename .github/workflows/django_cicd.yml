@@ -68,8 +68,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
             # 4. 기존 컨테이너 중지 및 삭제
-            sudo docker stop festival_backend_server || true
-            sudo docker rm festival_backend_server || true
+            sudo docker stop festival_backend_server && sudo docker rm festival_backend_server
 
             # 이전 버전 이미지 삭제
             sudo docker image prune -f 
