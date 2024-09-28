@@ -82,6 +82,3 @@ jobs:
 
             # 6. Django 프로젝트의 static 파일 collect
             sudo docker exec festival_backend_server python manage.py collectstatic --noinput
-
-            # 7. SQLite 데이터 복원 (loaddata)
-            sudo docker exec festival_backend_server python manage.py loaddata /app/data.json
