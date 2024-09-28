@@ -53,10 +53,7 @@ jobs:
             fi
 
             # 기존 컨테이너 접속
-            sudo docker exec -it festival_backend_server bash
-
-            # data.json 생성
-            python3 manage.py dumpdata > data.json && exit
+            sudo docker exec festival_backend_server bash -c "python manage.py dumpdata > /app/data.json"
 
             # data.json 을 컨테이너 외부로 복사
             sudo docker cp festival_backend_server:/app/data.json ./data.json
