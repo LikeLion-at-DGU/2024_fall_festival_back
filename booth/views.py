@@ -8,6 +8,7 @@ from .serializers import BoothSerializer, BoothDetailSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 import django_filters
 
+
 # Booth 필터 클래스 정의
 class BoothFilter(django_filters.FilterSet):
     class Meta:
