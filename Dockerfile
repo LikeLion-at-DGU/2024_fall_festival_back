@@ -18,4 +18,4 @@ COPY . .
 RUN pip install gunicorn
 
 # Django 마이그레이션 실행 후 Gunicorn으로 서버 시작
-CMD ["sh", "-c", "python manage.py migrate ", "python manage.py loaddata /app/data.json", "gunicorn --bind 0.0.0.0:8000 project.wsgi:application"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py loaddata /app/data.json && gunicorn --bind 0.0.0.0:8000 project.wsgi:application"]
