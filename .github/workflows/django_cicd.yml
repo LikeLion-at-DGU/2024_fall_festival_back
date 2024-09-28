@@ -59,7 +59,7 @@ jobs:
             python manage.py dumpdata > data.json && exit
 
             # data.json 을 컨테이너 외부로 복사
-            sudo docker cp festival_backend_server:/app/data.json ./data.json && sudo docker rm festival_backend_server:/app/data.json
+            sudo docker cp festival_backend_server:/app/data.json ./data.json
 
             # Docker 로그인 (토큰 사용)
             echo "${{ secrets.DOCKER_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -77,8 +77,8 @@ jobs:
             # 5. 새로운 컨테이너 시작
             sudo docker run --env-file 2024_fall_festival_back/.env -d -p 8000:8000 --name festival_backend_server ${{ secrets.DOCKER_USERNAME }}/festival_backend_image:latest
 
-            # data.json 파일을 복사 
-            sudo docker cp ./data.json festival_backend_server:/app/data.json
-
             # 6. Django 프로젝트의 static 파일 collect
             sudo docker exec festival_backend_server python manage.py collectstatic --noinput
+
+            # 7. SQLite 데이터 복원 (loaddata)
+            sudo docker exec festival_backend_server python manage.py loaddata ./data.json
