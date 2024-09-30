@@ -6,7 +6,7 @@ from .views import BoothViewSet, BoothDetailViewSet, BoothDetailListViewSet
 
 app_name = 'booth'
 
-router = SimpleRouter(trailing_slash=False)
+router = SimpleRouter(trailing_slash=True)
 router.register(r'booth', BoothViewSet, basename='booth')
 
 urlpatterns = [
