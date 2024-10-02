@@ -36,6 +36,7 @@ class BoothViewSet(viewsets.ModelViewSet):
         category = self.request.query_params.get('category')
         location = self.request.query_params.get('location')
         is_night = self.request.query_params.get('is_night')
+        is_reservable = self.request.query_params.get('is_reservable')  # 예약 가능 필터
 
         # day가 None이면 'Mon'으로 기본 설정
         if day is None:
@@ -52,6 +53,11 @@ class BoothViewSet(viewsets.ModelViewSet):
 
         if is_night is not None:
             queryset = queryset.filter(is_night=is_night.lower() == 'true')
+
+        # 예약 가능 여부 필터링 추가
+        if is_reservable is not None:
+            queryset = queryset.filter(is_reservable=is_reservable.lower() == 'true')
+
 
         queryset = queryset.order_by('name')
         

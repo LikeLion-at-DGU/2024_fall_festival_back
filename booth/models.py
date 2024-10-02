@@ -17,6 +17,7 @@ class Booth(models.Model):
     like_count = models.IntegerField(default=0)
     start_time = models.TimeField()
     end_time = models.TimeField()
+    is_reservable = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -32,6 +33,7 @@ class BoothDetail(models.Model):
     insta_link = models.TextField(blank=True)               # 인스타그램 링크
     image = models.ImageField(upload_to="booth/", blank=True, null=True)    # 부스 이미지
     like_count = models.IntegerField(default=0)                        # 부스 좋아요
+    is_reservable = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.like_count = self.booth.like_count
