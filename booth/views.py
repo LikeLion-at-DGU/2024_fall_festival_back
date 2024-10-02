@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, mixins, generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,6 +7,7 @@ from .serializers import BoothSerializer, BoothDetailSerializer
 # Create your views here.
 from django_filters.rest_framework import DjangoFilterBackend
 import django_filters
+from django.http import JsonResponse
 
 
 # Booth 필터 클래스 정의
@@ -51,6 +52,8 @@ class BoothViewSet(viewsets.ModelViewSet):
 
         if is_night is not None:
             queryset = queryset.filter(is_night=is_night.lower() == 'true')
+
+        queryset = queryset.order_by('name')
         
         return queryset
 
