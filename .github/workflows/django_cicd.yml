@@ -77,4 +77,4 @@ jobs:
             sudo docker exec festival_backend_server python manage.py collectstatic --noinput
 
             # 7. SQLite 데이터 복원 (loaddata)
-            sudo docker cp ./data.json festival_backend_server:/app/data.json && sudo docker exec festival_backend_server python manage.py loaddata /app/data.json
+            sudo docker cp ./data.json festival_backend_server:/app/data.json 
