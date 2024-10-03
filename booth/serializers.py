@@ -20,7 +20,7 @@ class BoothSerializer(serializers.ModelSerializer):
         model = Booth
         fields = ['id', 'day', 'category', 'latitude', 'longitude', 
                   'location', 'is_night', 'name', 'description', 'host', 
-                  'like_count', 'start_time', 'end_time', 'is_reservable', 'details_image']
+                  'start_time', 'end_time', 'is_reservable', 'details_image']
 
 
 class BoothDetailSerializer(serializers.ModelSerializer):
