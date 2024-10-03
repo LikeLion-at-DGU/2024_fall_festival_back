@@ -19,6 +19,7 @@ class BoothFilter(django_filters.FilterSet):
             'category': ['exact'],      # 카테고리 필터
             'location': ['exact'],      # 위치 필터
             'is_night': ['exact'],      # True 또는 False 필터
+            'is_reservable': ['exact'], # 예약 가능여부 필터 (true, default)
         }
 
 class BoothViewSet(viewsets.ModelViewSet):
