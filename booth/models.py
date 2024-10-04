@@ -30,7 +30,7 @@ class BoothDetail(models.Model):
     insta_id = models.CharField(max_length=50, blank=True)   # 인스타그램 아이디
     insta_link = models.TextField(blank=True)               # 인스타그램 링크
     image = models.ImageField(upload_to="booth/", blank=True, null=True)    # 부스 이미지
-    is_nignt = models.BooleanField(default=False, blank=True)       # 낮/밤 여부
+    is_night = models.BooleanField(default=False, blank=True)       # 낮/밤 여부
     is_reservable = models.BooleanField(default=False, blank=True)  # 예약 가능 여부
     location = models.CharField(max_length=20, blank=True)          # 위치
     category = models.CharField(max_length=20, blank=True)          # 부스 종류
@@ -39,7 +39,7 @@ class BoothDetail(models.Model):
     end_time = models.TimeField(blank=True)                       # 종료 시간
 
     def save(self, *args, **kwargs):
-        self.is_nignt = self.booth.is_night
+        self.is_night = self.booth.is_night
         self.is_reservable = self.booth.is_reservable
         self.location = self.booth.location
         self.category = self.booth.category
