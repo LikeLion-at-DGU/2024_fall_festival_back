@@ -24,7 +24,7 @@ class BoothSerializer(serializers.ModelSerializer):
 class BoothDetailSerializer(serializers.ModelSerializer):
     booth = serializers.PrimaryKeyRelatedField(queryset=Booth.objects.all())
     details_image = serializers.SerializerMethodField()
-    
+    name = serializers.CharField(source='booth.name', read_only=True)
     class Meta:
         model = BoothDetail
         fields = '__all__'

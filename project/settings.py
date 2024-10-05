@@ -152,6 +152,7 @@ CORS_ALLOWED_ORIGINS = [
     # 로컬 개발용 주소
     'http://localhost:3000',
     'http://localhost:5173',
+
     'https://localhost:5173',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:5173',
