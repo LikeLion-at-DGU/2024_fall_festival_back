@@ -157,5 +157,8 @@ CORS_ALLOWED_ORIGINS = [
 
     # 프론트엔드 도메인 또는 IP주소
     # 예를 들어, 아래와 같이 입력.
+    
+    "https://www.dgu-booth.site/"
     'http://dgu-booth.site',
+    'https://api.dgu-booth.site/'
 ]
