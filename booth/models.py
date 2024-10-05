@@ -16,7 +16,7 @@ class Booth(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     is_reservable = models.BooleanField(default=False)
-
+    thumbnail = models.ImageField(upload_to="booth/", blank=True, null=True)    # 부스 이미지
     def __str__(self):
         return self.name
     
@@ -29,7 +29,7 @@ class BoothDetail(models.Model):
     tabling_link = models.TextField(blank=True)         # 테이블링 서비스로 이동하는 링크
     insta_id = models.CharField(max_length=50, blank=True)   # 인스타그램 아이디
     insta_link = models.TextField(blank=True)               # 인스타그램 링크
-    image = models.ImageField(upload_to="booth/", blank=True, null=True)    # 부스 이미지
+    
     is_night = models.BooleanField(default=False, blank=True)       # 낮/밤 여부
     is_reservable = models.BooleanField(default=False, blank=True)  # 예약 가능 여부
     location = models.CharField(max_length=20, blank=True)          # 위치
@@ -47,3 +47,8 @@ class BoothDetail(models.Model):
         self.start_time = self.booth.start_time
         self.end_time = self.booth.end_time
         super().save(*args, **kwargs)
+
+class Image(models.Model):
+    id = models.AutoField(primary_key=True)     # 부스 디테일의 고유 id
+    booth = models.ForeignKey(Booth, on_delete=models.CASCADE, related_name="images")    # 부스 id를 외래키로 참조
+    image = models.ImageField(upload_to="booth/", blank=True, null=True)    # 부스 이미지

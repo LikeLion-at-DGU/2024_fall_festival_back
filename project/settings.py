@@ -33,7 +33,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['api.dgu-booth.site', 'dgu-booth.site', '13.124.231.185']
+ALLOWED_HOSTS = ['127.0.0.1', 'api.dgu-booth.site', 'dgu-booth.site', '13.124.231.185']
 
 
 # Application definition
@@ -158,7 +158,7 @@ CORS_ALLOWED_ORIGINS = [
     # 프론트엔드 도메인 또는 IP주소
     # 예를 들어, 아래와 같이 입력.
     
-    "https://www.dgu-booth.site/"
+    "https://www.dgu-booth.site",
     'http://dgu-booth.site',
-    'https://api.dgu-booth.site/'
+    'https://api.dgu-booth.site',
 ]
