@@ -31,6 +31,11 @@ class BoothDetailSerializer(serializers.ModelSerializer):
 
     def get_details_image(self, obj):
         # BoothDetail과 연결된 Booth의 id를 사용해 Image 모델에서 booth_id로 필터링
-        images = obj.booth.images.all().values_list('image', flat=True)
-        return list(images)  # 리스트 형태로 반환
+        request = self.context.get('request')  # request 객체를 가져옵니다.
+        images = obj.booth.images.all()  # 이미지를 가져옵니다.
+        
+        # 각 이미지 객체의 URL을 생성합니다.
+        image_urls = [request.build_absolute_uri(image.image.url) for image in images]
+        
+        return image_urls  # URL 리스트 형태로 반환
         
