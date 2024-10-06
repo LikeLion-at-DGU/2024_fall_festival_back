@@ -22,20 +22,32 @@ class BoothSerializer(serializers.ModelSerializer):
 
 
 class BoothDetailSerializer(serializers.ModelSerializer):
-    booth = serializers.PrimaryKeyRelatedField(queryset=Booth.objects.all())
+    # BoothDetail 모델의 필드를 추가
+    booth = serializers.IntegerField(source='id', read_only=True)
+    is_night = serializers.BooleanField(source='details.is_night', read_only=True)
+    day = serializers.CharField(source='details.day', read_only=True)
+    description = serializers.CharField(source='details.description', read_only=True)
+    start_time = serializers.DateTimeField(source='details.start_time', read_only=True)
+    end_time = serializers.DateTimeField(source='details.end_time', read_only=True)
+    is_reservable = serializers.BooleanField(source='details.is_reservable', read_only=True)
     details_image = serializers.SerializerMethodField()
-    name = serializers.CharField(source='booth.name', read_only=True)
+
+    detail_description = serializers.CharField(source='details.detail_description',read_only=True)
+    entrace_fee = serializers.IntegerField(source='details.entrace_fee',read_only=True)
+    menus = serializers.CharField(source='details.menus',read_only=True)
+    tabling_link = serializers.CharField(source='details.tabling_link',read_only=True)
+    insta_id = serializers.CharField(source='details.insta_id',read_only=True)
+    insta_link = serializers.CharField(source='details.insta_link',read_only=True)
+   
     class Meta:
-        model = BoothDetail
+        model = Booth
         fields = '__all__'
 
     def get_details_image(self, obj):
-        # BoothDetail과 연결된 Booth의 id를 사용해 Image 모델에서 booth_id로 필터링
-        request = self.context.get('request')  # request 객체를 가져옵니다.
-        images = obj.booth.images.all()  # 이미지를 가져옵니다.
-        
-        # 각 이미지 객체의 URL을 생성합니다.
+        request = self.context.get('request')
+        images = obj.images.all()  # OneToOne 관계에서 booth의 이미지를 가져옴
+
+        # URL을 생성
         image_urls = [request.build_absolute_uri(image.image.url) for image in images]
-        
-        return image_urls  # URL 리스트 형태로 반환
+        return image_urls
         

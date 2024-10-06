@@ -65,7 +65,7 @@ class BoothViewSet(viewsets.ModelViewSet):
         return queryset
 
 class BoothDetailViewSet(generics.RetrieveUpdateAPIView):
-    queryset = BoothDetail.objects.all()
+    queryset = Booth.objects.all()
     serializer_class = BoothDetailSerializer
     lookup_field = 'id'
 
