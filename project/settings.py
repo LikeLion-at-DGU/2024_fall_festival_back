@@ -33,7 +33,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['127.0.0.1', 'api.dgu-booth.site', 'dgu-booth.site', '13.124.231.185']
+ALLOWED_HOSTS = ['127.0.0.1', 'api.dgu-booth.site', 'dgu-booth.site', '13.124.231.185', "dgu-booth.shop"]
 
 
 # Application definition
